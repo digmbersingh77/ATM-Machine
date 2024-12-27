@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Machine Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>ATM Machine</h2>
+
+        <!-- Main Screen to Choose Login or Sign Up -->
+        <div id="main-screen">
+            <button class="btn" onclick="showLoginScreen()">Login</button>
+            <button class="btn" onclick="showSignupScreen()">Sign Up</button>
+        </div>
+    </div>
+
+    <script>
+        function showLoginScreen() {
+        window.location.href = "/login";
+    }
+
+// Show the sign-up screen
+    function showSignupScreen() {
+        window.location.href = "/signup";
+    }
+
+
+    </script>
+
+</body>
+</html>

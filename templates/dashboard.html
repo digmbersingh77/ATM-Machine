@@ -1,0 +1,104 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Machine Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <script>
+        async function checkBalance() {
+        const response = await fetch('/check_balance', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const data = await response.json();
+
+        if (data.balance !== undefined) {
+            document.getElementById("atm-message").innerHTML = `Your balance is: $${data.balance}`;
+        } else {
+            document.getElementById("atm-message").innerHTML = data.message || 'Error occurred';
+        }
+    }
+
+
+    async function deposit() {
+        const amount = parseFloat(document.getElementById("deposit-amount").value);
+
+        const response = await fetch('/deposit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({ amount: amount })
+        });
+
+        const data = await response.json();
+
+        if (data.balance !== undefined) {
+            document.getElementById("atm-message").innerHTML = `New balance: $${data.balance}`;
+        } else {
+            document.getElementById("atm-message").innerHTML = data.message || 'Error occurred';
+        }
+
+        // Clear the input field
+        document.getElementById("deposit-amount").value = '';
+    }
+
+
+    async function withdraw() {
+        const amount = parseFloat(document.getElementById("withdraw-amount").value);
+
+        const response = await fetch('/withdraw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount: amount })
+        });
+
+        const data = await response.json();
+
+        if (data.balance !== undefined) {
+            document.getElementById("atm-message").innerHTML = `New balance: $${data.balance}`;
+        }else {
+            document.getElementById("atm-message").innerHTML = data.message || 'Error occurred';
+        }
+
+        // Clear the input field
+        document.getElementById("withdraw-amount").value = '';
+    }
+    </script>
+</head>
+<body>
+     <div class="container">
+         <!-- ATM Screen -->
+         <div id="atm-screen" style="display: block;"> <!-- Show ATM screen by default -->
+            <h3>Welcome, {{ session['username'] }}</h3>  <!-- Directly use session username -->
+
+            <!-- Check Balance -->
+            <div class="form-group">
+                <button class="btn" onclick="checkBalance()">Check Balance</button>
+            </div>
+            <!-- Deposit Amount -->
+            <div class="form-group">
+                <label for="deposit-amount">Deposit Amount</label>
+                <input type="number" id="deposit-amount" placeholder="Enter amount">
+                <button class="btn" onclick="deposit()">Deposit</button>
+            </div>
+            <!-- Withdraw Amount -->
+            <div class="form-group">
+                <label for="withdraw-amount">Withdraw Amount</label>
+                <input type="number" id="withdraw-amount" placeholder="Enter amount">
+                <button class="btn" onclick="withdraw()">Withdraw</button>
+            </div>
+            <!-- ATM Message -->
+            <div class="message" id="atm-message"></div>
+             <!-- Logout Button -->
+            <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="btn">Logout</button>
+            </form>
+
+        </div>
+     </div>
+</body>
